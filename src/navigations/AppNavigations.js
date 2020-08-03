@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import { Text, View } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import {ScreenLogin,ScreenRegister} from '../screens/Login/index'
+import ScreenLogin from '../screens/Login/ScreenLogin'
+import ScreenRegister from '../screens/Login/ScreenRegister'
 
 export default class AppNavigations extends Component {
     render() {

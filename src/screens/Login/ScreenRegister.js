@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
-import { Text, View,TextInput, StyleSheet, TouchableOpacity  } from 'react-native'
+import { Text, View,TextInput, StyleSheet, TouchableOpacity, Keyboard  } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 function Infomation({navigation}){
     const [phone, setPhone] = React.useState("")
-    const [password, setPassword] = React.useState(null)
-    const [enterPassword, setEnterPassword] = React.useState(null)
+    const [password, setPassword] = React.useState('')
+    const [enterPassword, setEnterPassword] = React.useState('')
     let [ErrPhone,setEP] = React.useState(false)
     let [ErrPassword,setErrPassword] = React.useState(false)
     let [ErrEnterPassword,setErrEnterPassword] = React.useState(false)
@@ -15,10 +15,38 @@ function Infomation({navigation}){
     let [DetailPasswordErr,setDetailPasswordErr] = React.useState("Mật khẩu chưa đủ mạnh")
     let [DetailEnterPasswordErr,setDetailEnterPasswordErr] = React.useState("Nhập lại mật khẩu không đúng")
 
-    const nextConfirmCode = (phone)=>{
-        navigation.navigate("ConfirmCode",{
-            phone:phone
-        })
+    const nextConfirmCode = async (phone, password,enterPassword)=>{
+        Keyboard.dismiss()
+        function next(){
+
+        }
+        if(phone.length<6){
+            setEP(true);
+        }
+        else{
+            setEP(false);
+            if(password.length<6){
+                setErrPassword(true);
+            }
+            else{
+                setErrPassword(false);
+                if(enterPassword != password){
+                    setErrEnterPassword(true);
+                }
+                else{
+                    setErrEnterPassword(false)
+                    
+                    //chuyển trang mã xác nhận đăng ký tài khoản
+                    navigation.navigate("ConfirmCode",{
+                        phone:phone
+                    })
+                }
+            }
+        }
+        
+        
+  
+        
     }
 
     return(
@@ -30,12 +58,13 @@ function Infomation({navigation}){
                 <View style={style.boxInput}>
                     <Icon style={style.icon} name="user" size={25} color="white" />
                     <TextInput 
-                        style={[ErrPhone ? style.inputError : style.input]}
+                        style={style.input}
                         placeholder="Nhập số điện thoại"
                         placeholderTextColor="white"
+                        autoCapitalize = 'none'
                         defaultValue={phone}
-                        onEndEditing={(data)=>{
-                            setPhone(data.nativeEvent.text)
+                        onChangeText={(text)=>{
+                            setPhone(text)
                         }}
                         />
                         
@@ -48,6 +77,11 @@ function Infomation({navigation}){
                         style={style.input}
                         placeholder="Mật khẩu"
                         placeholderTextColor="white"
+                        autoCapitalize = 'none'
+                        defaultValue={password}
+                        onChangeText={(text)=>{
+                            setPassword(text)
+                        }}
                         />
                         <View>{ErrPassword? (<Icon style={{marginTop:"100%"}} name="exclamation-triangle" size={20} color="red" />) : null}</View>
                 </View>
@@ -57,10 +91,15 @@ function Infomation({navigation}){
                         style={style.input}
                         placeholder="Nhập lại mật khẩu"
                         placeholderTextColor="white"
+                        autoCapitalize = 'none'
+                        defaultValue={enterPassword}
+                        onChangeText={(text)=>{
+                            setEnterPassword(text)
+                        }}
                         />
                         <View>{ErrEnterPassword? (<Icon style={{marginTop:"100%"}} name="exclamation-triangle" size={20} color="red" />) : null}</View>
                 </View>
-                <TouchableOpacity onPress={()=>nextConfirmCode(phone)} style={style.btnLogin}>
+                <TouchableOpacity onPress={()=>nextConfirmCode(phone,password,enterPassword)} style={style.btnLogin}>
                         <Text style={style.titleLogin}>tiếp theo</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress ={()=>navigation.goBack()} style={style.btnRegister}>
@@ -85,6 +124,7 @@ function ConfirmCode({navigation, route}){
                         style={style.input}
                         placeholder="Nhập mã xác nhận"
                         placeholderTextColor="white"
+                        
                         />
                     <Text></Text>
                 </View>
@@ -96,7 +136,7 @@ function ConfirmCode({navigation, route}){
     )
 }
 const Stack = createStackNavigator();
-function ScreenRegister({ navigation }){
+export default function ScreenRegister(){
     return (    
             <Stack.Navigator screenOptions={{
                 headerShown:false
@@ -188,7 +228,3 @@ const style = StyleSheet.create({
     }
 })
 
-
-module.exports = {
-    ScreenRegister:ScreenRegister
-}

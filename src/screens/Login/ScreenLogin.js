@@ -1,10 +1,49 @@
 import React, { Component } from 'react'
-import { Text, View,TextInput, StyleSheet, TouchableOpacity  } from 'react-native'
+import { Text, View,TextInput, StyleSheet, TouchableOpacity,Modal, Keyboard  } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 
-function ScreenLogin({ navigation }){
+
+
+
+export default function ScreenLogin({ navigation }){
+    const [modal,setModal] = React.useState(false)
+    const [hidePass,setHidePass] = React.useState(true);
+    const [phone, setPhone] = React.useState("")
+    const [password, setPassword] = React.useState("")
+    const [errorMsg,setErrorMsg] = React.useState("")
+
+
+    function login(phone,password){
+        Keyboard.dismiss();
+        if((phone =='0939165008') && (password=='123456')){
+            alert("ok")
+        }else{
+            setModal(true);
+            setErrorMsg("Tên đăng nhập hoặc mật khẩu không hợp lệ")
+            if(phone.length<6){
+                setErrorMsg("Vui lòng nhập tên đăng nhập")
+            }
+        }
+    }
+
     return (    
         <View style={style.container}>
+            {modal ? (
+                <View style={style.boxModal}>
+                    <View style={style.modal}>
+                        <Text style={{fontSize:15}}>{errorMsg}</Text>
+                        <TouchableOpacity onPress={()=>{
+                            setModal(false);
+                            setErrorMsg("");
+                        }} style={style.btnok}>
+                                <Text style={style.titleLogin}>Đã rõ</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            ) : null}
+            
+
+
             <View style={style.boxLogo}>
                 <Text>LOGO WeTech</Text>
             </View>
@@ -15,6 +54,12 @@ function ScreenLogin({ navigation }){
                         style={style.input}
                         placeholder="Tên đăng nhập"
                         placeholderTextColor="white"
+                        defaultValue={phone}
+                        returnKeyType="next"
+                        onChangeText={(text)=>{
+                            setPhone(text)
+                        }}
+                        
                         />
                 </View>
                 <View style={style.boxInput}>
@@ -23,10 +68,16 @@ function ScreenLogin({ navigation }){
                         style={style.input}
                         placeholder="Mật khẩu"
                         placeholderTextColor="white"
+                        defaultValue={password}
+                        returnKeyType="done"
+                        secureTextEntry={hidePass}
+                        onChangeText={(text)=>{
+                            setPassword(text)
+                        }}
                         />
-                    <Icon  style={style.showIconPassword} name="eye" size={20} color="#DBDBDB" />
+                    <Icon onPress={()=>setHidePass(!hidePass)} style={style.showIconPassword} name="eye" size={20} color="#DBDBDB" />
                 </View>
-                <TouchableOpacity onPress = {()=>{alert("ok")}} style={style.btnLogin}>
+                <TouchableOpacity onPress = {()=>login(phone,password)} style={style.btnLogin}>
                         <Text style={style.titleLogin}>đăng nhập</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={()=>navigation.push("Register")} style={style.btnRegister}>
@@ -41,6 +92,24 @@ const style = StyleSheet.create({
     container:{
         flex:1,
         width:"100%",
+    },
+    boxModal:{
+        width:"100%",
+        height:"100%",
+        position:"absolute",
+        backgroundColor:"rgba(0,0,0,0.5)",
+        zIndex:5
+    },
+    modal:{
+        backgroundColor:"white",
+        width:"100%",
+        height:"30%",
+        justifyContent:"center",
+        alignItems:"center",
+        position:"absolute",
+        zIndex:9,
+        top:"25%",
+        borderRadius:10
     },
     boxLogo:{
         flex:1,
@@ -88,6 +157,15 @@ const style = StyleSheet.create({
     btnRegister:{
         marginTop:"5%",
     },
+    btnok:{
+        width:"30%",
+        padding:"3%",
+        marginTop:"20%",
+        backgroundColor:"#0F7C03",
+        justifyContent:"center",
+        alignItems:"center",
+        borderRadius:5
+    },  
     registerLink:{
         color:"#2950F1"
     },
@@ -98,7 +176,3 @@ const style = StyleSheet.create({
     }
 })
 
-
-module.exports = {
-    ScreenLogin:ScreenLogin
-}
