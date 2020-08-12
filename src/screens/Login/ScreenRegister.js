@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { Text, View,TextInput, StyleSheet, TouchableOpacity, Keyboard  } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 function Infomation({navigation}){
