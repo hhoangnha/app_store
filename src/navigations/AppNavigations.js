@@ -13,7 +13,7 @@ export default class AppNavigations extends Component {
         const Stack = createStackNavigator()
         return (
             <NavigationContainer>
-                <StatusBar barStyle="dark-content" backgroundColor="#1ABC9C"  />
+                <StatusBar barStyle="light-content" backgroundColor="#1ABC9C"  />
                 <Stack.Navigator screenOptions={{headerShown:false}}>
                     {/* <Stack.Screen name="Login" component={ScreenLogin} />
                     <Stack.Screen name="Register" component={ScreenRegister} /> */}
